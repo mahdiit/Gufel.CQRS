@@ -5,27 +5,31 @@ namespace Gufel.CQRS.PubSub
 {
     public class MemoryPubSubHandler<T> : IPubSubHandler<T>
     {
-        private readonly ConcurrentDictionary<string, List<SubscribeHandler<T>>> _inMemoryDic = new();
+        private readonly ConcurrentDictionary<string, List<ISubscribeHandler<T>>> _inMemoryDic = new();
 
         public void Publish(string topic, T value)
         {
-            if (!_inMemoryDic.TryGetValue(topic, out List<SubscribeHandler<T>>? items)) return;
-            Parallel.ForEach((items), (item) =>
+            if (!_inMemoryDic.TryGetValue(topic, out List<ISubscribeHandler<T>>? items)) return;
+            Parallel.ForEach(items, async (item) =>
             {
-                item.Invoke(value);
+                await item.HandleAsync(value);
             });
         }
 
-        public void Subscribe(string topic, SubscribeHandler<T> handler)
+        public bool Subscribe(string topic, ISubscribeHandler<T> handler)
         {
             var items = _inMemoryDic.GetOrAdd(topic, []);
             items.Add(handler);
+            return true;
         }
 
-        public void Unsubscribe(string topic, SubscribeHandler<T> hadnler)
+        public bool Unsubscribe(string topic, ISubscribeHandler<T> hadnler)
         {
-            if (!_inMemoryDic.TryGetValue(topic, out List<SubscribeHandler<T>>? value)) return;
+            if (!_inMemoryDic.TryGetValue(topic, out List<ISubscribeHandler<T>>? value)
+                ||  !value.Contains(hadnler))
+                return false;
             value.Remove(hadnler);
+            return true;
         }
     }
 }
