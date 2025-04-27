@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35931.197 d17.13
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gufel.CQRS", "Gufel.CQRS.csproj", "{32937ECF-1B71-4C18-B217-9991627FCD12}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gufel.CQRS", "CQRS\Gufel.CQRS.csproj", "{32937ECF-1B71-4C18-B217-9991627FCD12}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "UnitTest\UnitTest.csproj", "{28FE7AB9-62C8-4DF6-8EB4-CB80759532BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{32937ECF-1B71-4C18-B217-9991627FCD12}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32937ECF-1B71-4C18-B217-9991627FCD12}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32937ECF-1B71-4C18-B217-9991627FCD12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28FE7AB9-62C8-4DF6-8EB4-CB80759532BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28FE7AB9-62C8-4DF6-8EB4-CB80759532BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28FE7AB9-62C8-4DF6-8EB4-CB80759532BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28FE7AB9-62C8-4DF6-8EB4-CB80759532BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
