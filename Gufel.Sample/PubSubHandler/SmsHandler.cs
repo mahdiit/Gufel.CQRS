@@ -10,6 +10,8 @@ namespace Gufel.Sample.PubSubHandler
 {
     public class SmsHandler : ISubscribeHandler<NotificationModel>
     {
+        public string Topic => "sms";
+
         public async Task HandleAsync(NotificationModel data)
         {
             await Task.Delay(1000);

@@ -1,6 +1,8 @@
-﻿using Gufel.CQRS.PubSub;
+﻿using Gufel.CQRS.Base.PubSub;
+using Gufel.CQRS.PubSub;
 using Gufel.Sample.Models;
 using Gufel.Sample.PubSubHandler;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Gufel.Sample
 {
@@ -9,14 +11,16 @@ namespace Gufel.Sample
         static void Main(string[] args)
         {
             Console.WriteLine("Sart");
-            var orderMemoryHolder = new MemoryPubSubHandler<OrderModel>();
-            var smsHolder = new MemoryPubSubHandler<NotificationModel>();
+            var services = new ServiceCollection();
+            services.AddMessagePublisher();
+            services.AddSingleton<ISubscribeHandler<OrderModel>, StockHandler>();
+            services.AddSingleton<ISubscribeHandler<NotificationModel>, SmsHandler>();
 
-            orderMemoryHolder.Subscribe("reg-order", new StockHandler(smsHolder));
-            smsHolder.Subscribe("sms", new SmsHandler());
+            using var app = services.BuildServiceProvider();
+            var publisher = app.GetRequiredService<IMessagePublisher>();
 
             var order = new OrderModel() { Id = 1, OrderCount = 22, ProductId = 13, UserId = 1300 };
-            orderMemoryHolder.Publish("reg-order", order);
+            publisher.Publish("reg-order", order);
 
             Console.WriteLine("End");
             Console.ReadLine();

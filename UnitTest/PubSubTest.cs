@@ -1,5 +1,6 @@
 ﻿using Gufel.CQRS.Base.PubSub;
 using Gufel.CQRS.PubSub;
+using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using System;
 using System.Collections.Generic;
@@ -7,13 +8,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UnitTest
+namespace Gufel.UnitTest
 {
     public class PubSubTest
     {
         public class TestHandler : ISubscribeHandler<int>
         {
             public int Item {  get; set; }
+
+            public string Topic => "sender";
+
             public Task HandleAsync(int data)
             {
                 Item =  data;
@@ -24,31 +28,16 @@ namespace UnitTest
         [Fact]
         public void Subscribe_handler_test()
         {
-            var pubSubHandler = new MemoryPubSubHandler<int>();
+            var services = new ServiceCollection();
+            services.AddMessagePublisher();
+            services.AddSingleton<ISubscribeHandler<int>, TestHandler>();
 
-            var testHandler1 = new TestHandler();
-            var testHandler2 = new TestHandler();
+            var app = services.BuildServiceProvider();
+            var publisher = app.GetRequiredService<IMessagePublisher>();
+            publisher.Publish("sender", 100);
 
-            pubSubHandler.Subscribe("sender", testHandler1);
-            pubSubHandler.Subscribe("sender", testHandler2);
-            pubSubHandler.Publish("sender", 100);
-
-            testHandler1.Item.ShouldBe(100);            
-            testHandler1.Item.ShouldBe(testHandler2.Item);
-        }
-
-        [Fact]
-        public void Unsubscribe_handler_test()
-        {
-            var pubSubHandler = new MemoryPubSubHandler<int>();
-            var testHandler1 = new TestHandler();
-
-            pubSubHandler.Subscribe("sender", testHandler1);
-            var trueResult  = pubSubHandler.Unsubscribe("sender", testHandler1);
-            trueResult.ShouldBeTrue();
-
-            var falseResult = pubSubHandler.Unsubscribe("sender", testHandler1);
-            falseResult.ShouldBeFalse();
+            var testHandler1 = app.GetRequiredService<TestHandler>();
+            testHandler1.Item.ShouldBe(100);
         }
     }
 }
