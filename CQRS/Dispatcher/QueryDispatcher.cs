@@ -5,10 +5,16 @@ namespace Gufel.CQRS.Dispatcher
 {
     public class QueryDispatcher(IServiceProvider serviceProvider) : IQueryDispatcher
     {
-        public Task<TQueryResult> Dispatch<TQuery, TQueryResult>(TQuery query, CancellationToken cancellation)
+        public async Task<TQueryResult> Dispatch<TQuery, TQueryResult>(TQuery query, CancellationToken cancellation)
         {
+            var pipelines = serviceProvider.GetServices<IPipelineHandler<TQuery, TQueryResult>>();
+            foreach (var pipeline in pipelines)
+            {
+                await pipeline.Handle(query, cancellation);
+            }
+
             var handler = serviceProvider.GetRequiredService<IQueryHandler<TQuery, TQueryResult>>();
-            return handler.Handle(query, cancellation);
+            return await handler.Handle(query, cancellation);
         }
     }
 }
