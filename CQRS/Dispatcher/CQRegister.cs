@@ -11,27 +11,25 @@ namespace Gufel.CQRS.Dispatcher
 {
     public static class CqRegister
     {
-        private static void RegisterTypeImplement(IServiceCollection services, Assembly assembly, Type type)
+        private static void RegisterTypeImplement(IServiceCollection services, Assembly assembly, params Type[] type)
         {
             assembly.GetTypes()
                 .Where(t => t.GetInterfaces().Length >= 1 &&
                             t.GetInterfaces().Any(p => p.IsGenericType) &&
-                            t.GetInterfaces().First(p => p.IsGenericType).GetGenericTypeDefinition() == type
+                            type.Contains(t.GetInterfaces().First(p => p.IsGenericType).GetGenericTypeDefinition())
                 )
                 .ToList()
                 .ForEach(handler =>
                 {
                     var requestInterface = handler.GetInterfaces()
-                        .First(p => p.IsGenericType && p.GetGenericTypeDefinition() == type);
+                        .First(p => p.IsGenericType && type.Contains(p.GetGenericTypeDefinition()));
                     services.AddScoped(requestInterface, handler);
                 });
         }
 
         public static void RegisterDispatcher(this IServiceCollection services, Assembly assembly)
         {
-            RegisterTypeImplement(services, assembly, typeof(IQueryHandler<,>));
-            RegisterTypeImplement(services, assembly, typeof(ICommandHandler<,>));
-            RegisterTypeImplement(services, assembly, typeof(IPipelineHandler<,>));
+            RegisterTypeImplement(services, assembly, typeof(IQueryHandler<,>), typeof(ICommandHandler<,>), typeof(IPipelineHandler<,>));
 
             services.AddSingleton<ICommandDispatcher, CommandDispatcher>();
             services.AddSingleton<IQueryDispatcher, QueryDispatcher>();
