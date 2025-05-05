@@ -27,6 +27,12 @@ namespace Gufel.Sample
 
             var dispatcher = app.GetRequiredService<IDispatcher>();
             var command = new SampleRequest() { Id = 1200 };
+
+            var bool1 = RequestTypeChecker.IsGenericIRequest(typeof(SampleRequestNoResponse));
+            var bool2 = RequestTypeChecker.IsNonGenericIRequest(typeof(SampleRequestNoResponse));
+            Console.WriteLine(bool1);
+            Console.WriteLine(bool2);
+
             var result  = await dispatcher.Dispatch<SampleRequest, SampleResponse>(command, CancellationToken.None);
             Console.WriteLine("Dispatch result: " + result.Result);
 
@@ -35,7 +41,6 @@ namespace Gufel.Sample
             Console.WriteLine("Dispatch result: no result ");
 
             Console.WriteLine("End");
-            Console.ReadLine();
         }
     }
 }
