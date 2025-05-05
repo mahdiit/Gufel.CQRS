@@ -11,20 +11,20 @@ namespace Gufel.CQRS.Dispatcher
 {
     public static class DispatcherRegister
     {
-        private static void RegisterTypeImplement(IServiceCollection services, Assembly assembly, Type type)
+        private static void RegisterTypeImplement(IServiceCollection services, Assembly assembly, params Type[] type)
         {
-            var modules = assembly
-                .GetTypes()
-                .Where(t => type.IsAssignableFrom(t) && t is { IsInterface: false, IsAbstract: false })
-                .ToList();
-
-            foreach (var module in modules)
-            {
-                var requestInterface = module.GetInterfaces()
-                    .First(p => p.IsGenericType && p.GetGenericTypeDefinition() == type);
-
-                services.AddScoped(requestInterface, module);
-            }
+            assembly.GetTypes()
+                .Where(t => t.GetInterfaces().Length >= 1 &&
+                            t.GetInterfaces().Any(p => p.IsGenericType) &&
+                            type.Contains(t.GetInterfaces().First(p => p.IsGenericType).GetGenericTypeDefinition())
+                )
+                .ToList()
+                .ForEach(handler =>
+                {
+                    var requestInterface = handler.GetInterfaces()
+                        .First(p => p.IsGenericType && type.Contains(p.GetGenericTypeDefinition()));
+                    services.AddScoped(requestInterface, handler);
+                });
         }
 
         public static void RegisterDispatcher(this IServiceCollection services, Assembly assembly)

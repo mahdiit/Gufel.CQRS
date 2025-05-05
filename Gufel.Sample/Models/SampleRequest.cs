@@ -7,17 +7,17 @@ using Gufel.CQRS.Base.Dispatcher;
 
 namespace Gufel.Sample.Models
 {
-    public class SampleRequest
+    public class SampleRequest: IRequest<SampleResponse>
     {
         public int Id { get; set; }
     }
 
-    public class SampleResponse
+    public class SampleResponse: IResponse
     {
         public bool Result { get; set; }
     }
 
-    public class SampleHandler : ICommandHandler<SampleRequest, SampleResponse>
+    public class SampleHandler : IRequestHandler<SampleRequest, SampleResponse>
     {
         public async Task<SampleResponse> Handle(SampleRequest command, CancellationToken cancellation)
         {

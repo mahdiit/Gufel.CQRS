@@ -25,7 +25,7 @@ namespace Gufel.Sample
             //var order = new OrderModel() { Id = 1, OrderCount = 22, ProductId = 13, UserId = 1300 };
             //publisher.Publish("reg-order", order);
 
-            var dispatcher = app.GetRequiredService<ICommandDispatcher>();
+            var dispatcher = app.GetRequiredService<IDispatcher>();
             var command = new SampleRequest() { Id = 1200 };
 
             var result  = await dispatcher.Dispatch<SampleRequest, SampleResponse>(command, CancellationToken.None);
