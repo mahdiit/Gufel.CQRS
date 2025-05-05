@@ -1,7 +1,6 @@
-﻿using Gufel.CQRS.Base.Dispatcher;
-using Gufel.CQRS.Base.PubSub;
-using Gufel.CQRS.Dispatcher;
-using Gufel.CQRS.PubSub;
+﻿using Gufel.Dispatcher.Base.Dispatcher;
+using Gufel.Dispatcher.Base.MessagePublisher;
+using Gufel.Dispatcher.Implement;
 using Gufel.Sample.Models;
 using Gufel.Sample.PubSubHandler;
 using Microsoft.Extensions.DependencyInjection;

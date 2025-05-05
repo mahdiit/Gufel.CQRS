@@ -1,4 +1,4 @@
-﻿namespace Gufel.CQRS.Base.Dispatcher
+﻿namespace Gufel.Dispatcher.Base.Dispatcher
 {
     public interface IDispatcher
     {
@@ -9,11 +9,4 @@
             where TRequest: IRequest<TResponse>
             where TResponse : IResponse;
     }
-
-    public interface IRequest { }
-
-    public interface IRequest<TResponse>
-        : IRequest where TResponse : IResponse;
-
-    public interface IResponse { }
 }

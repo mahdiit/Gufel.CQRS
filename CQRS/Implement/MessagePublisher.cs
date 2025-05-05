@@ -1,10 +1,10 @@
 ﻿using System.Collections;
-using Gufel.CQRS.Base.PubSub;
 using System.Collections.Concurrent;
+using Gufel.Dispatcher.Base.MessagePublisher;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace Gufel.CQRS.PubSub
+namespace Gufel.Dispatcher.Implement
 {
     public class MessagePublisher(IServiceProvider services, IMessagePublishStrategy strategy) : IMessagePublisher
     {

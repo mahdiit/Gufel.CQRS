@@ -1,4 +1,4 @@
-﻿namespace Gufel.CQRS.Base.PubSub
+﻿namespace Gufel.Dispatcher.Base.MessagePublisher
 {
     public interface ISubscribeHandler<in TData>
     {

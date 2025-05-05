@@ -1,4 +1,4 @@
-﻿namespace Gufel.CQRS.Base.Dispatcher
+﻿namespace Gufel.Dispatcher.Base.Dispatcher
 {
     public interface IRequestHandler<in TRequest> where TRequest : IRequest
     {

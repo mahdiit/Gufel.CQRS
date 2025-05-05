@@ -1,7 +1,7 @@
-﻿using Gufel.CQRS.Base.Dispatcher;
+﻿using Gufel.Dispatcher.Base.Dispatcher;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Gufel.CQRS.Dispatcher
+namespace Gufel.Dispatcher.Implement
 {
     public class Dispatcher(IServiceProvider serviceProvider) : IDispatcher
     {

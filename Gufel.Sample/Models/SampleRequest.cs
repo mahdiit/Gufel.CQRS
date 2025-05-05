@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Gufel.CQRS.Base.Dispatcher;
+using Gufel.Dispatcher.Base.Dispatcher;
 
 namespace Gufel.Sample.Models
 {

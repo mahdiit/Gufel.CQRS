@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Gufel.CQRS.Base.PubSub
+﻿namespace Gufel.Dispatcher.Base.MessagePublisher
 {
     public class WhenAllMessagePublishStrategy : IMessagePublishStrategy
     {

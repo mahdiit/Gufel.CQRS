@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CQRS\Gufel.CQRS.csproj" />
+    <ProjectReference Include="..\CQRS\Gufel.Dispatcher.csproj" />
   </ItemGroup>
 
 </Project>

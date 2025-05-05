@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Gufel.CQRS.Base.Dispatcher;
+﻿using System.Reflection;
+using Gufel.Dispatcher.Base.Dispatcher;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Gufel.CQRS.Dispatcher
+namespace Gufel.Dispatcher.Implement
 {
-    public static class DispatcherRegister
+    public static class RegisterDispatcherHelper
     {
         private static void RegisterTypeImplement(IServiceCollection services, Assembly assembly, params Type[] type)
         {
@@ -29,9 +24,13 @@ namespace Gufel.CQRS.Dispatcher
 
         public static void RegisterDispatcher(this IServiceCollection services, Assembly assembly)
         {
-            RegisterTypeImplement(services, assembly, typeof(IPipelineHandler<,>), typeof(IRequestHandler<,>));
-            RegisterTypeImplement(services, assembly, typeof(IPipelineHandler<>), typeof(IRequestHandler<>));
-            services.AddSingleton<IDispatcher, Dispatcher >();
+            RegisterTypeImplement(services, assembly,
+                typeof(IPipelineHandler<,>),
+                typeof(IRequestHandler<,>),
+                typeof(IPipelineHandler<>),
+                typeof(IRequestHandler<>));
+
+            services.AddSingleton<IDispatcher, Dispatcher>();
         }
     }
 }

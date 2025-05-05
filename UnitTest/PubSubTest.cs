@@ -1,12 +1,12 @@
-﻿using Gufel.CQRS.Base.PubSub;
-using Gufel.CQRS.PubSub;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Gufel.Dispatcher.Base.MessagePublisher;
+using Gufel.Dispatcher.Implement;
 
 namespace Gufel.UnitTest
 {

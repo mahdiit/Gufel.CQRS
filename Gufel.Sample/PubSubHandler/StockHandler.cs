@@ -1,10 +1,10 @@
-﻿using Gufel.CQRS.Base.PubSub;
-using Gufel.Sample.Models;
+﻿using Gufel.Sample.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Gufel.Dispatcher.Base.MessagePublisher;
 
 namespace Gufel.Sample.PubSubHandler
 {

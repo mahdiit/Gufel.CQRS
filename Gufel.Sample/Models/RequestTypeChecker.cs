@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using Gufel.CQRS.Base.Dispatcher;
+using Gufel.Dispatcher.Base.Dispatcher;
 
 public static class RequestTypeChecker
 {
