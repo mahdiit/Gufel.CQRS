@@ -6,8 +6,15 @@ using System.Threading.Tasks;
 
 namespace Gufel.CQRS.Base.Dispatcher
 {
-    public interface IPipelineHandler<TCq, TCqResult>
+    public interface IPipelineHandler<in TRequest> where TRequest : IRequest
     {
-        Task Handle(TCq command, CancellationToken cancellation);
+        Task Handle(TRequest command, CancellationToken cancellation);
+    }
+
+    public interface IPipelineHandler<in TRequest, TResponse>
+        where TRequest : IRequest<TResponse>
+        where TResponse : IResponse
+    {
+        Task Handle(TRequest request, CancellationToken cancellation);
     }
 }
