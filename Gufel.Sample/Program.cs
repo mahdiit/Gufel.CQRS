@@ -27,9 +27,12 @@ namespace Gufel.Sample
 
             var dispatcher = app.GetRequiredService<IDispatcher>();
             var command = new SampleRequest() { Id = 1200 };
-
             var result  = await dispatcher.Dispatch<SampleRequest, SampleResponse>(command, CancellationToken.None);
             Console.WriteLine("Dispatch result: " + result.Result);
+
+            var cmd2 = new SampleRequestNoResponse() { Id = 1300 };
+            await dispatcher.Dispatch<SampleRequestNoResponse>(cmd2, CancellationToken.None);
+            Console.WriteLine("Dispatch result: no result ");
 
             Console.WriteLine("End");
             Console.ReadLine();

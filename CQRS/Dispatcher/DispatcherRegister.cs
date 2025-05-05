@@ -29,8 +29,8 @@ namespace Gufel.CQRS.Dispatcher
 
         public static void RegisterDispatcher(this IServiceCollection services, Assembly assembly)
         {
-            RegisterTypeImplement(services, assembly, typeof(IPipelineHandler<,>));
-            RegisterTypeImplement(services, assembly, typeof(IRequestHandler<,>));
+            RegisterTypeImplement(services, assembly, typeof(IPipelineHandler<,>), typeof(IRequestHandler<,>));
+            RegisterTypeImplement(services, assembly, typeof(IPipelineHandler<>), typeof(IRequestHandler<>));
             services.AddSingleton<IDispatcher, Dispatcher >();
         }
     }
