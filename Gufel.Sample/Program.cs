@@ -17,7 +17,7 @@ namespace Gufel.Sample
             services.AddSingleton<ISubscribeHandler<OrderModel>, StockHandler>();
             services.AddSingleton<ISubscribeHandler<NotificationModel>, SmsHandler>();
 
-            services.RegisterDispatcher(typeof(Program).Assembly);
+            services.AddDispatcher(typeof(Program).Assembly);
 
             await using var app = services.BuildServiceProvider();
             var publisher = app.GetRequiredService<IMessagePublisher>();

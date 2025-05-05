@@ -22,7 +22,7 @@ namespace Gufel.Dispatcher.Implement
                 });
         }
 
-        public static void RegisterDispatcher(this IServiceCollection services, Assembly assembly)
+        public static void AddDispatcher(this IServiceCollection services, Assembly assembly)
         {
             RegisterTypeImplement(services, assembly,
                 typeof(IPipelineHandler<,>),

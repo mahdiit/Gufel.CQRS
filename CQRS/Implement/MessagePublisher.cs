@@ -15,13 +15,4 @@ namespace Gufel.Dispatcher.Implement
             strategy.SendMessage(subscribers, value);
         }
     }
-
-    public static class MessagePublisherRegister
-    {
-        public static void AddMessagePublisher(this IServiceCollection services, IMessagePublishStrategy? strategy = null)
-        {
-            services.AddSingleton(x => strategy ?? new ParallelMessagePublishStrategy());
-            services.AddSingleton<IMessagePublisher, MessagePublisher>();
-        }
-    }
 }
