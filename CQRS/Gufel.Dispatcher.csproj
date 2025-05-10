@@ -19,7 +19,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Include="..\dispacher.jpg">
+		<None Include="..\dispatcher.jpg">
 		  <Pack>True</Pack>
 		  <PackagePath>\</PackagePath>
 		</None>
