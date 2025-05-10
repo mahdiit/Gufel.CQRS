@@ -60,7 +60,8 @@ public class DispatcherTests
 
     public DispatcherTests()
     {
-        var services = new ServiceCollection();
+        var services = new ServiceCollection()
+            .AddHttpContextAccessor();
         
         _pipelineHandler = new TestPipelineHandler();
         _pipelineHandlerWithResponse = new TestPipelineHandlerWithResponse();

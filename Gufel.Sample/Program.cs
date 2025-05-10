@@ -11,7 +11,7 @@ namespace Gufel.Sample
     {
         static async Task Main(string[] args)
         {
-            Console.WriteLine("Sart");
+            Console.WriteLine("Start");
             var services = new ServiceCollection();
             services.AddMessagePublisher();
             services.AddSingleton<ISubscribeHandler<OrderModel>, StockHandler>();
