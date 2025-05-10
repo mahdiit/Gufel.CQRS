@@ -24,13 +24,15 @@ namespace Gufel.Dispatcher.Implement
 
         public static void AddDispatcher(this IServiceCollection services, Assembly assembly)
         {
+            services.AddHttpContextAccessor();
+
             RegisterTypeImplement(services, assembly,
                 typeof(IPipelineHandler<,>),
                 typeof(IRequestHandler<,>),
                 typeof(IPipelineHandler<>),
                 typeof(IRequestHandler<>));
 
-            services.AddSingleton<IDispatcher, Dispatcher>();
+            services.AddScoped<IDispatcher, Dispatcher>();
         }
     }
 }
