@@ -40,6 +40,7 @@ namespace Gufel.Sample
             Console.WriteLine("Dispatch result: no result ");
 
             Console.WriteLine("End");
+            Console.ReadKey();
         }
     }
 }

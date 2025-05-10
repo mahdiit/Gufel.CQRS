@@ -6,14 +6,14 @@
 		<Nullable>enable</Nullable>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 
-		<PackageId>Gufel.Dispacher</PackageId>
-		<Title>Gufel Dispacher (CQRS And Mediator)</Title>
+		<PackageId>Gufel.Dispatcher</PackageId>
+		<Title>Gufel Dispatcher (CQRS And Mediator)</Title>
 		<Authors>mahdiit</Authors>
-		<Version>1.0.2</Version>
+		<Version>1.0.3</Version>
 		<Description>CQRS And Mediator with pipeline handler and message publisher</Description>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/mahdiit/Gufel.CQRS</RepositoryUrl>
-		<PackageTags>cqrs;mediator;message;notification;task</PackageTags>
+		<PackageTags>cqrs;mediator;message;notification;task;dispatcher</PackageTags>
 		<PackageIcon>dispacher.jpg</PackageIcon>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
 	</PropertyGroup>
