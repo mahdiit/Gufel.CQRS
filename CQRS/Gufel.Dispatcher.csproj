@@ -14,7 +14,7 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/mahdiit/Gufel.CQRS</RepositoryUrl>
 		<PackageTags>cqrs;mediator;message;notification;task;dispatcher</PackageTags>
-		<PackageIcon>dispacher.jpg</PackageIcon>
+		<PackageIcon>dispatcher.jpg</PackageIcon>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
 	</PropertyGroup>
 
