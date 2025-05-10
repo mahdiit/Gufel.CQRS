@@ -15,7 +15,7 @@ namespace Gufel.Sample.PubSubHandler
         public async Task HandleAsync(NotificationModel data)
         {
             await Task.Delay(1000);
-            Console.WriteLine($"{DateTime.UtcNow.ToString("G")}\t{data.MobileNo}\t{data.Text}");
+            Console.WriteLine($"{DateTime.UtcNow:G}\t{data.MobileNo}\t{data.Text}");
         }
     }
 }

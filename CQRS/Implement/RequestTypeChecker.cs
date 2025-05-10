@@ -1,6 +1,6 @@
-﻿using System;
-using System.Linq;
-using Gufel.Dispatcher.Base.Dispatcher;
+﻿using Gufel.Dispatcher.Base.Dispatcher;
+
+namespace Gufel.Dispatcher.Implement;
 
 public static class RequestTypeChecker
 {
