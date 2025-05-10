@@ -9,13 +9,14 @@
 		<PackageId>Gufel.Dispatcher</PackageId>
 		<Title>Gufel Dispatcher (CQRS And Mediator)</Title>
 		<Authors>mahdiit</Authors>
-		<Version>1.0.3</Version>
+		<Version>1.0.5</Version>
 		<Description>CQRS And Mediator with pipeline handler and message publisher</Description>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/mahdiit/Gufel.CQRS</RepositoryUrl>
 		<PackageTags>cqrs;mediator;message;notification;task;dispatcher</PackageTags>
 		<PackageIcon>dispatcher.jpg</PackageIcon>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+		<PackageProjectUrl>https://github.com/mahdiit/Gufel.CQRS</PackageProjectUrl>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -34,10 +35,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.4" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.4" />
+		<PackageReference Include="ZLinq" Version="1.4.2" />
 	</ItemGroup>
 
 </Project>
