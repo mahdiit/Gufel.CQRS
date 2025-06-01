@@ -88,5 +88,28 @@ namespace Gufel.UnitTest
 
             Assert.True(vDate1 > vDate2);
         }
+
+        [Fact]
+        public void TryParse_FromString()
+        {
+            var inputStr = "1404/03/11";
+            var parseResult = VDate.TryParse(inputStr, out var dateResult);
+
+            Assert.NotNull(dateResult);
+            Assert.True(parseResult);
+        }
+
+        [Fact]
+        public void Implicit_Cast_Int()
+        {
+            var inputDate = 14040311;
+            VDate vDate = inputDate;
+
+            var expectedResult = new { Year = 1404, Month = 3, Day = 11 };
+
+            Assert.Equal(vDate.Year, expectedResult.Year);
+            Assert.Equal(vDate.Month, expectedResult.Month);
+            Assert.Equal(vDate.Day, expectedResult.Day);
+        }
     }
 }

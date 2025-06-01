@@ -358,22 +358,45 @@ namespace Gufel.Date
             }
         }
 
-        public static explicit operator int(VDate input)
+        public static implicit operator int(VDate input)
         {
             return Convert.ToInt32($"{input.Year:D4}{input.Month:D2}{input.Day:D2}");
         }
 
-        public static explicit operator VDate(int input)
+        public static implicit operator VDate(int input)
         {
-            var dtStr = input.ToString();
-            if (dtStr.Length == 8)
+            ReadOnlySpan<char> span = input.ToString();
+            if (span.Length == 8)
                 return new VDate(
-                    Convert.ToInt32(dtStr.Substring(0, 4)),
-                    Convert.ToInt32(dtStr.Substring(4, 2)),
-                    Convert.ToInt32(dtStr.Substring(6, 2))
+                    int.Parse(span.Slice(0, 4)),
+                    int.Parse(span.Slice(4, 2)),
+                    int.Parse(span.Slice(6, 2))
                 );
 
-            return Now;
+            throw new ArgumentException("Invalid date format int");
+        }
+
+        public static implicit operator DateTime(VDate input)
+        {
+            return input.ToDateTime();
+        }
+
+        public static implicit operator VDate(DateTime input)
+        {
+            return new VDate(input);
+        }
+
+        public static explicit operator string(VDate input)
+        {
+            return input.ToString("$yyyy/$MM/$dd");
+        }
+
+        public static explicit operator VDate(string input)
+        {
+            if (TryParse(input, out var dateResult))
+                return dateResult!;
+
+            throw new ArgumentException("Invalid date format string");
         }
 
         public int CompareTo(VDate? other)
