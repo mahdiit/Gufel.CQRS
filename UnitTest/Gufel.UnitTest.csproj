@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CQRS\Gufel.Dispatcher.csproj" />
+    <ProjectReference Include="..\Gufel.Date\Gufel.Date.csproj" />
   </ItemGroup>
 
   <ItemGroup>
