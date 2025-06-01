@@ -2,32 +2,43 @@
 using Gufel.Dispatcher.Base.Dispatcher;
 using Gufel.Dispatcher.Base.MessagePublisher;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.ObjectPool;
 
 namespace Gufel.Dispatcher.Implement
 {
     public static class RegisterHelper
     {
-        private static void RegisterTypeImplement(IServiceCollection services, Assembly assembly, params Type[] type)
+        public static void RegisterTypeImplementations(IServiceCollection services, Assembly assembly, ServiceLifetime lifetime, params Type[] openGenericTypes)
         {
-            assembly.GetTypes()
-                .Where(t => t.GetInterfaces().Length >= 1 &&
-                            t.GetInterfaces().Any(p => p.IsGenericType) &&
-                            type.Contains(t.GetInterfaces().First(p => p.IsGenericType).GetGenericTypeDefinition())
-                )
-                .ToList()
-                .ForEach(handler =>
+            var implementationTypes = assembly.GetTypes()
+                .Where(t => t.GetInterfaces()
+                    .Any(i => i.IsGenericType && openGenericTypes.Contains(i.GetGenericTypeDefinition())))
+                .ToList();
+
+            foreach (var implementationType in implementationTypes)
+            {
+                var matchingInterface = implementationType.GetInterfaces()
+                    .First(i => i.IsGenericType && openGenericTypes.Contains(i.GetGenericTypeDefinition()));
+
+                switch (lifetime)
                 {
-                    var requestInterface = handler.GetInterfaces()
-                        .First(p => p.IsGenericType && type.Contains(p.GetGenericTypeDefinition()));
-                    services.AddScoped(requestInterface, handler);
-                });
+                    case ServiceLifetime.Singleton:
+                        services.AddSingleton(matchingInterface, implementationType);
+                        break;
+                    case ServiceLifetime.Scoped:
+                        services.AddScoped(matchingInterface, implementationType);
+                        break;
+                    case ServiceLifetime.Transient:
+                        services.AddTransient(matchingInterface, implementationType);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(lifetime), $"Unsupported lifetime: {lifetime}");
+                }
+            }
         }
 
         public static void AddDispatcher(this IServiceCollection services, Assembly assembly)
         {
-            RegisterTypeImplement(services, assembly,
+            RegisterTypeImplementations(services, assembly, ServiceLifetime.Scoped,
                 typeof(IPipelineHandler<,>),
                 typeof(IRequestHandler<,>),
                 typeof(IPipelineHandler<>),
@@ -38,7 +49,7 @@ namespace Gufel.Dispatcher.Implement
 
         public static void AddMessagePublisher(this IServiceCollection services, IMessagePublishStrategy? strategy = null)
         {
-            services.AddSingleton(x => strategy ?? new ParallelMessagePublishStrategy());
+            services.AddSingleton(_ => strategy ?? new ParallelMessagePublishStrategy());
 
             services.AddScoped<IMessagePublisher, MessagePublisher>();
         }
