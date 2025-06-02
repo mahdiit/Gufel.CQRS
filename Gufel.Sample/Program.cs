@@ -32,7 +32,7 @@ namespace Gufel.Sample
             Console.WriteLine(bool1);
             Console.WriteLine(bool2);
 
-            var result  = await dispatcher.Dispatch<SampleRequest, SampleResponse>(command, CancellationToken.None);
+            var result = await dispatcher.Dispatch(command, CancellationToken.None);
             Console.WriteLine("Dispatch result: " + result.Result);
 
             var cmd2 = new SampleRequestNoResponse() { Id = 1300 };

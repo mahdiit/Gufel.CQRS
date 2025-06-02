@@ -2,13 +2,12 @@ using Gufel.Dispatcher.Base.Dispatcher;
 using Gufel.Dispatcher.Implement;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
-using Xunit;
 
 namespace Gufel.UnitTest;
 
 public class TestRequest : IRequest { }
 public class TestRequestWithResponse : IRequest<TestResponse> { }
-public class TestResponse : IResponse { }
+public class TestResponse { }
 
 public class TestPipelineHandler : IPipelineHandler<TestRequest>
 {
@@ -61,20 +60,14 @@ public class DispatcherTests
     public DispatcherTests()
     {
         var services = new ServiceCollection();
-        
-        _pipelineHandler = new TestPipelineHandler();
-        _pipelineHandlerWithResponse = new TestPipelineHandlerWithResponse();
-        _requestHandler = new TestRequestHandler();
-        _requestHandlerWithResponse = new TestRequestHandlerWithResponse();
-
-        services.AddSingleton<IPipelineHandler<TestRequest>>(_pipelineHandler);
-        services.AddSingleton<IPipelineHandler<TestRequestWithResponse, TestResponse>>(_pipelineHandlerWithResponse);
-        services.AddSingleton<IRequestHandler<TestRequest>>(_requestHandler);
-        services.AddSingleton<IRequestHandler<TestRequestWithResponse, TestResponse>>(_requestHandlerWithResponse);
-        services.AddSingleton<IDispatcher, Dispatcher.Implement.Dispatcher>();
+        services.AddDispatcher(typeof(DispatcherTests).Assembly);
 
         IServiceProvider serviceProvider = services.BuildServiceProvider();
         _dispatcher = serviceProvider.GetRequiredService<IDispatcher>();
+        _pipelineHandler = (TestPipelineHandler)serviceProvider.GetRequiredService<IPipelineHandler<TestRequest>>();
+        _pipelineHandlerWithResponse = (TestPipelineHandlerWithResponse)serviceProvider.GetRequiredService<IPipelineHandler<TestRequestWithResponse, TestResponse>>();
+        _requestHandler = (TestRequestHandler)serviceProvider.GetRequiredService<IRequestHandler<TestRequest>>();
+        _requestHandlerWithResponse = (TestRequestHandlerWithResponse)serviceProvider.GetRequiredService<IRequestHandler<TestRequestWithResponse, TestResponse>>();
     }
 
     [Fact]
@@ -98,11 +91,11 @@ public class DispatcherTests
         var request = new TestRequestWithResponse();
 
         // Act
-        var response = await _dispatcher.Dispatch<TestRequestWithResponse, TestResponse>(request, CancellationToken.None);
+        var response = await _dispatcher.Dispatch(request, CancellationToken.None);
 
         // Assert
         _pipelineHandlerWithResponse.WasHandled.ShouldBeTrue();
         _requestHandlerWithResponse.WasHandled.ShouldBeTrue();
         response.ShouldNotBeNull();
     }
-} 
+}

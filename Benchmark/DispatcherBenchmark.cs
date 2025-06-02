@@ -13,12 +13,12 @@ public class DispatcherBenchmark
     private readonly IDispatcher _dispatcher;
     private readonly IMediator _mediator;
     private readonly TestRequest _request;
-    private readonly TestMediatRRequest _mediatRRequest;
+    private readonly TestMediatRRequest _mediatrRequest;
 
     public DispatcherBenchmark()
     {
         var services = new ServiceCollection();
-        
+
         // Register 100 handlers for Dispatcher
         for (int i = 0; i < 100; i++)
         {
@@ -26,7 +26,7 @@ public class DispatcherBenchmark
         }
 
         services.AddDispatcher(typeof(DispatcherBenchmark).Assembly);
-        
+
         // Register 100 handlers for MediatR
         for (int i = 0; i < 100; i++)
         {
@@ -37,21 +37,21 @@ public class DispatcherBenchmark
         var serviceProvider = services.BuildServiceProvider();
         _dispatcher = serviceProvider.GetRequiredService<IDispatcher>();
         _mediator = serviceProvider.GetRequiredService<IMediator>();
-        
+
         _request = new TestRequest { Id = 1 };
-        _mediatRRequest = new TestMediatRRequest { Id = 1 };
+        _mediatrRequest = new TestMediatRRequest { Id = 1 };
     }
 
     [Benchmark]
     public async Task Dispatcher_100Handlers()
     {
-        await _dispatcher.Dispatch<TestRequest, TestResponse>(_request, CancellationToken.None);
+        await _dispatcher.Dispatch(_request, CancellationToken.None);
     }
 
     [Benchmark]
     public async Task MediatR_100Handlers()
     {
-        await _mediator.Send(_mediatRRequest, CancellationToken.None);
+        await _mediator.Send(_mediatrRequest, CancellationToken.None);
     }
 }
 
@@ -61,7 +61,7 @@ public class TestRequest : Gufel.Dispatcher.Base.Dispatcher.IRequest<TestRespons
     public int Id { get; set; }
 }
 
-public class TestResponse : IResponse
+public class TestResponse
 {
     public int Result { get; set; }
 }
@@ -109,4 +109,4 @@ public class Program
     {
         var summary = BenchmarkRunner.Run<DispatcherBenchmark>();
     }
-} 
+}

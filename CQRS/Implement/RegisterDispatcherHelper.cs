@@ -44,6 +44,32 @@ namespace Gufel.Dispatcher.Implement
                 typeof(IPipelineHandler<>),
                 typeof(IRequestHandler<>));
 
+            var pipeLineNoResponse = assembly.GetTypes()
+                .Where(t => t.GetInterfaces()
+                    .Any(i => i.IsGenericType &&
+                              i.GetGenericTypeDefinition() == typeof(IPipelineHandler<>)))
+                .SelectMany(t => t.GetInterfaces())
+                .Where(i => i.IsGenericType &&
+                            i.GetGenericTypeDefinition() == typeof(IPipelineHandler<>))
+                .Select(i => new ValueTuple<Type, Type?>(i.GetGenericArguments()[0], null)) // Extract TRequest
+                .Distinct()
+                .ToList();
+
+            var pipeLineResponse = assembly.GetTypes()
+                .Where(t => t.GetInterfaces()
+                    .Any(i => i.IsGenericType &&
+                              i.GetGenericTypeDefinition() == typeof(IPipelineHandler<,>)))
+                .SelectMany(t => t.GetInterfaces())
+                .Where(i => i.IsGenericType &&
+                            i.GetGenericTypeDefinition() == typeof(IPipelineHandler<,>))
+                .Select(i => new ValueTuple<Type, Type?>(i.GetGenericArguments()[0], i.GetGenericArguments()[1])) // Extract TRequest
+                .Distinct()
+                .ToList();
+
+            services.AddSingleton<IRequestPipelineMetadata>(
+                new RequestPipelineMetadata(pipeLineNoResponse.Union(pipeLineResponse)));
+
+
             services.AddScoped<IDispatcher, Dispatcher>();
         }
 

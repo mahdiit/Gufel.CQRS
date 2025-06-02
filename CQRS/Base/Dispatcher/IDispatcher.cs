@@ -2,11 +2,9 @@
 {
     public interface IDispatcher
     {
-        Task Dispatch<TRequest>(TRequest request, CancellationToken cancellation)
-            where TRequest: IRequest;
+        Task<TResponse> Dispatch<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default);
 
-        Task<TResponse> Dispatch<TRequest, TResponse>(TRequest request, CancellationToken cancellation)
-            where TRequest: IRequest<TResponse>
-            where TResponse : IResponse;
+        Task Dispatch<TRequest>(TRequest request, CancellationToken cancellationToken = default)
+            where TRequest : IRequest;
     }
 }

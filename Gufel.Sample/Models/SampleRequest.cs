@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Gufel.Dispatcher.Base.Dispatcher;
+﻿using Gufel.Dispatcher.Base.Dispatcher;
 
 namespace Gufel.Sample.Models
 {
@@ -12,12 +7,12 @@ namespace Gufel.Sample.Models
         public int Id { get; set; }
     }
 
-    public class SampleRequest: IRequest<SampleResponse>
+    public class SampleRequest : IRequest<SampleResponse>
     {
         public int Id { get; set; }
     }
 
-    public class SampleResponse: IResponse
+    public class SampleResponse
     {
         public bool Result { get; set; }
     }
@@ -48,7 +43,7 @@ namespace Gufel.Sample.Models
     public class Sample2Pipeline : IPipelineHandler<SampleRequest, SampleResponse>
     {
         public async Task Handle(SampleRequest command, CancellationToken cancellation)
-        {   
+        {
             Console.WriteLine("pipeline 2 run " + command.Id);
             await Task.Delay(1000, cancellation);
         }
