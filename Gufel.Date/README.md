@@ -17,13 +17,13 @@ Gufel.Date is a flexible and powerful date manipulation library for .NET that pr
 
 Install the package via NuGet:
 
-```bash
+```sh
 dotnet add package Gufel.Date
 ```
 
 ## Usage
 ### Basic Usage
-```csharp
+```c#
 // Create a VDate from current date and time (default is Persian calendar)
 var now = VDate.Now;
 
@@ -38,7 +38,7 @@ var vDate = new VDate(DateTime.Now);
 ```
 
 ### Working with Different Calendars
-```csharp
+```c#
 // Create a date with Hijri calendar
 var hijriDate = new VDate(VDateSettingFactory.GetSetting("ar"), DateTime.Now);
 
@@ -49,7 +49,7 @@ Console.WriteLine($"Hijri Day: {hijriDate.Day}");
 ```
 
 ### Date Formatting
-```csharp
+```c#
 var date = new VDate(1404, 3, 11, 14, 10, 23);
 
 // Format as string
@@ -59,8 +59,10 @@ string formatted = date.ToString("f"); // Full date/time pattern
 // Custom format
 string custom = date.ToString("$yyyy/$MM/$dd");
 // Output: "1404/03/11"
+```
 
 ### Date Comparison
+```c#
 var date1 = new VDate(1404, 3, 11);
 var date2 = new VDate(1404, 3, 12);
 
@@ -70,14 +72,16 @@ bool isGreater = date1 > date2; // false
 ```
 
 ### Date Parsing
-```csharp
+```c#
 // Parse from string
 if (VDate.TryParse("1404/03/11", out var parsedDate))
 {
     Console.WriteLine($"Year: {parsedDate.Year}, Month: {parsedDate.Month}, Day: {parsedDate.Day}");
 }
+```
 
 ### Type Conversions
+```c#
 // Convert from integer (YYYYMMDD format)
 int dateInt = 14040311;
 VDate dateFromInt = dateInt;
@@ -94,7 +98,6 @@ VDate dateFromString = (VDate)"1404/03/11";
 
 ## Format Patterns
 The ToString(string format) method supports the following patterns:
-```code
 - $dddd - Day name (e.g., "یکشنبه")
 - $dd - Day of month with leading zero (e.g., "01")
 - $d - Day of month (e.g., "1")
@@ -112,9 +115,7 @@ The ToString(string format) method supports the following patterns:
 - $ss - Second with leading zero (e.g., "09")
 - $s - Second (e.g., "9")
 - $g - AM/PM designator (e.g., "ب.ظ" for PM in Persian)
-```
+- 
 Predefined formats:
-```code
 - f or F - Full date/time pattern
 - s or S - Sortable date/time pattern
-```
