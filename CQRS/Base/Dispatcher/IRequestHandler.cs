@@ -1,13 +1,17 @@
 ﻿namespace Gufel.Dispatcher.Base.Dispatcher
 {
-    public interface IRequestHandler<in TRequest> where TRequest : IRequest
+    public interface IRequestHandlerBase { }
+
+    public interface IRequestHandler<in TRequest> : IRequestHandlerBase
+        where TRequest : IRequest
     {
-        Task Handle(TRequest request, CancellationToken cancellation);
+        Task Handle(TRequest request, CancellationToken cancellationToken);
     }
 
-    public interface IRequestHandler<in TRequest, TResponse>
+    public interface IRequestHandler<in TRequest, TResponse> :
+        IRequestHandlerBase
         where TRequest : IRequest<TResponse>
     {
-        Task<TResponse> Handle(TRequest request, CancellationToken cancellation);
+        Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken);
     }
 }
