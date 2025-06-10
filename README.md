@@ -76,7 +76,7 @@ public class LoggingPipeline : IPipelineHandler<CreateOrderRequest, CreateOrderR
 
 // Usage
 var request = new CreateOrderRequest { ProductId = 1, Quantity = 2 };
-var response = await dispatcher.Dispatch<CreateOrderRequest, CreateOrderResponse>(request, CancellationToken.None);
+var response = await dispatcher.Dispatch(request, CancellationToken.None);
 ```
 
 ### 2. Message Publisher (Pub/Sub)
