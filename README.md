@@ -15,6 +15,12 @@ A lightweight CQRS (Command Query Responsibility Segregation) and in-memory pub/
 ```bash
 dotnet add package Gufel.Dispatcher
 ```
+## Benchmark
+
+| Method              | Mean     | Error    | StdDev   | Ratio | Allocated | Alloc Ratio |
+|-------------------- |---------:|---------:|---------:|------:|----------:|------------:|
+| Dispatcher_Dispatch | 15.71 ms | 0.113 ms | 0.106 ms |  1.00 |     619 B |        1.00 |
+| MediatR_Send        | 15.61 ms | 0.174 ms | 0.163 ms |  0.99 |     662 B |        1.07 |
 
 ## Usage
 

@@ -3,20 +3,22 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Gufel.Dispatcher.Implement
 {
-    public sealed class Dispatcher(IServiceProvider serviceProvider, IRequestPipelineMetadata pipelineMetadata) : IDispatcher
+    public sealed class Dispatcher(
+        IServiceProvider serviceProvider,
+        IRequestPipelineMetadata pipelineMetadata) : IDispatcher
     {
-        public async Task Dispatch<TRequest>(TRequest request, CancellationToken cancellationToken = default)
+        public async Task Dispatch<TRequest>(
+            TRequest request,
+            CancellationToken cancellationToken = default)
             where TRequest : IRequest
         {
             if (pipelineMetadata.HasPipeline(typeof(TRequest), null))
             {
-                var pipelines = serviceProvider.GetService<IEnumerable<IPipelineHandler<TRequest>>>();
-                if (pipelines != null)
+                var pipelines = serviceProvider.GetRequiredService<IEnumerable<IPipelineHandler<TRequest>>>();
+
+                foreach (var pipeline in pipelines)
                 {
-                    foreach (var pipeline in pipelines)
-                    {
-                        await pipeline.Handle(request, cancellationToken);
-                    }
+                    await pipeline.Handle(request, cancellationToken);
                 }
             }
 
@@ -24,23 +26,27 @@ namespace Gufel.Dispatcher.Implement
             await handler.Handle(request, cancellationToken);
         }
 
-        public async Task<TResponse> Dispatch<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default)
+        public async Task<TResponse> Dispatch<TResponse>(
+            IRequest<TResponse> request,
+            CancellationToken cancellationToken = default)
         {
             if (pipelineMetadata.HasPipeline(typeof(IRequest<TResponse>), typeof(TResponse)))
             {
-                var pipelines = serviceProvider.GetService<IEnumerable<IPipelineHandler<IRequest<TResponse>, TResponse>>>();
-                if (pipelines != null)
+                var pipelines = serviceProvider
+                    .GetRequiredService<IEnumerable<IPipelineHandler<IRequest<TResponse>, TResponse>>>();
+
+                foreach (var pipeline in pipelines)
                 {
-                    foreach (var pipeline in pipelines)
-                    {
-                        await pipeline.Handle(request, cancellationToken);
-                    }
+                    await pipeline.Handle(request, cancellationToken);
                 }
             }
 
-            var handler = serviceProvider.GetRequiredService<IRequestHandler<IRequest<TResponse>, TResponse>>();
+            var handler = serviceProvider
+                .GetRequiredService<IRequestHandler<IRequest<TResponse>, TResponse>>();
+
             return await handler.Handle(request, cancellationToken);
         }
     }
+
 
 }

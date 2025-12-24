@@ -2,18 +2,11 @@
 
 namespace Gufel.Dispatcher.Implement;
 
-public class RequestPipelineMetadata : IRequestPipelineMetadata
+public sealed class RequestPipelineMetadata(IEnumerable<(Type Request, Type? Response)> requestTypes)
+    : IRequestPipelineMetadata
 {
-    private readonly HashSet<string> _requestsWithPipelines;
-
-    public RequestPipelineMetadata(IEnumerable<ValueTuple<Type, Type?>> requestTypes)
-    {
-        _requestsWithPipelines = [.. requestTypes.Select(x => GetHashSetKey(x.Item1, x.Item2))];
-    }
-
-    private static string GetHashSetKey(Type requestType, Type? responseType) =>
-        requestType.FullName + "-" + (responseType?.FullName ?? "None");
+    private readonly HashSet<(Type Request, Type? Response)> _pipelines = new(requestTypes);
 
     public bool HasPipeline(Type requestType, Type? responseType)
-        => _requestsWithPipelines.Contains(GetHashSetKey(requestType, responseType));
+        => _pipelines.Contains((requestType, responseType));
 }
