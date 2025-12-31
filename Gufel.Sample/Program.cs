@@ -22,7 +22,7 @@ namespace Gufel.Sample
             await using var app = services.BuildServiceProvider();
             var publisher = app.GetRequiredService<IMessagePublisher>();
             var order = new OrderModel() { Id = 1, OrderCount = 22, ProductId = 13, UserId = 1300 };
-            publisher.Publish("reg-order", order);
+            await publisher.Publish(order, CancellationToken.None);
 
             var dispatcher = app.GetRequiredService<IDispatcher>();
             var command = new SampleRequest() { Id = 1200 };

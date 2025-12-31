@@ -2,5 +2,5 @@
 
 public interface IMessagePublishStrategy
 {
-    Task SendMessage<T>(IEnumerable<ISubscribeHandler<T>> subscribers, T value);
+    Task SendMessage<T>(IEnumerable<ISubscribeHandler<T>> subscribers, T value, CancellationToken cancellationToken);
 }

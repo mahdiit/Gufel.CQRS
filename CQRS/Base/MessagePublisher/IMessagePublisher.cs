@@ -2,6 +2,8 @@
 {
     public interface IMessagePublisher
     {
-        void Publish<TData>(string topic, TData value);
+        Task Publish<TData>(string topic, TData value, CancellationToken cancellationToken);
+
+        Task Publish<TData>(TData value, CancellationToken cancellationToken);
     }
 }

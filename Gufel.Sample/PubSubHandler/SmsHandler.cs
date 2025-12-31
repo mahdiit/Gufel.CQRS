@@ -1,20 +1,16 @@
-﻿using Gufel.Sample.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Gufel.Dispatcher.Base.MessagePublisher;
+﻿using Gufel.Dispatcher.Base.MessagePublisher;
+using Gufel.Dispatcher.Implement.MessagePublisher;
+using Gufel.Sample.Models;
 
 namespace Gufel.Sample.PubSubHandler
 {
-    public class SmsHandler : ISubscribeHandler<NotificationModel>
+    public class SmsHandler(IMessagePublisherNameResolver nameResolver)
+        : SubscribeHandler<NotificationModel>(nameResolver)
     {
-        public string Topic => "sms";
-
-        public async Task HandleAsync(NotificationModel data)
+        public override async Task HandleAsync(NotificationModel data, CancellationToken cancellationToken = default)
         {
-            await Task.Delay(1000);
+            await Task.Delay(1000, cancellationToken);
+
             Console.WriteLine($"{DateTime.UtcNow:G}\t{data.MobileNo}\t{data.Text}");
         }
     }

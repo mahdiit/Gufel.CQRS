@@ -1,8 +1,11 @@
 ﻿using Gufel.Dispatcher.Base.Dispatcher;
 using Gufel.Dispatcher.Base.MessagePublisher;
 using Gufel.Dispatcher.Implement.Adapter;
+using Gufel.Dispatcher.Implement.MessagePublisher;
+using Gufel.Dispatcher.Implement.MessagePublisher.Strategy;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
+
 
 namespace Gufel.Dispatcher.Implement
 {
@@ -23,10 +26,13 @@ namespace Gufel.Dispatcher.Implement
             services.AddScoped<IDispatcher, Dispatcher>();
         }
 
-        public static void AddMessagePublisher(this IServiceCollection services, IMessagePublishStrategy? strategy = null)
+        public static void AddMessagePublisher(this IServiceCollection services,
+            IMessagePublishStrategy? strategy = null,
+            IMessagePublisherNameResolver? nameResolver = null)
         {
+            services.AddSingleton(nameResolver ?? new MessagePublisherDefaultNameResolver());
             services.AddSingleton(strategy ?? new ParallelMessagePublishStrategy());
-            services.AddScoped<IMessagePublisher, MessagePublisher>();
+            services.AddScoped<IMessagePublisher, MessagePublisher.MessagePublisher>();
         }
 
         private static void RegisterTypeImplementations(
