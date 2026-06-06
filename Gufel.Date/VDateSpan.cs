@@ -10,17 +10,16 @@ namespace Gufel.Date
 
         public override string ToString()
         {
-            var result = new List<string>();
-            if (Year > 0)
-                result.Add($"{Year} {Resources.YearText}");
+            var count = (Year > 0 ? 1 : 0) + (Month > 0 ? 1 : 0) + (Days > 0 ? 1 : 0);
+            if (count == 0) return string.Empty;
 
-            if (Month > 0)
-                result.Add($"{Month} {Resources.MonthText}");
+            var parts = new string[count];
+            var idx = 0;
+            if (Year > 0) parts[idx++] = $"{Year} {Resources.YearText}";
+            if (Month > 0) parts[idx++] = $"{Month} {Resources.MonthText}";
+            if (Days > 0) parts[idx++] = $"{Days} {Resources.DayText}";
 
-            if (Days > 0)
-                result.Add($"{Days} {Resources.DayText}");
-
-            return string.Join($" {Resources.Separator} ", result);
+            return string.Join($" {Resources.Separator} ", parts);
         }
     }
 }

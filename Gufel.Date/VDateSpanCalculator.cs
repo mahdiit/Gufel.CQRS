@@ -49,7 +49,7 @@ namespace Gufel.Date
                 total.Days = endDate.Day + (endDate.MonthLength - startDate.Day) + add;
             }
 
-            total.Year = Convert.ToInt32(Math.Floor(Convert.ToSingle(total.Month) / 12));
+            total.Year = total.Month / 12;
             total.Month -= 12 * total.Year;
 
             return total;

@@ -7,9 +7,9 @@ public sealed class FireAndForgetPublishStrategy(IMessagePublishStrategy inner) 
         T value,
         CancellationToken cancellationToken)
     {
-        var materialized = subscribers.ToArray();
+        var materialized = subscribers.ToList();
 
-        if (materialized.Length == 0)
+        if (materialized.Count == 0)
             return Task.CompletedTask;
 
         _ = Task.Run(() => inner.SendMessage(materialized, value, cancellationToken));

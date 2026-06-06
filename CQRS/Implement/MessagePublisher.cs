@@ -10,18 +10,31 @@ namespace Gufel.Dispatcher.Implement
         {
             var allSubscribers = serviceProvider.GetServices<ISubscribeHandler<T>>();
 
-            List<ISubscribeHandler<T>>? filtered = null;
+            var count = 0;
             foreach (var sub in allSubscribers)
             {
                 if (sub.Topic == topic)
+                    count++;
+            }
+
+            if (count == 0)
+                return Task.CompletedTask;
+
+            if (count == 1)
+            {
+                foreach (var sub in allSubscribers)
                 {
-                    filtered ??= [];
-                    filtered.Add(sub);
+                    if (sub.Topic == topic)
+                        return strategy.SendMessage([sub], value, cancellationToken);
                 }
             }
 
-            if (filtered is null)
-                return Task.CompletedTask;
+            var filtered = new List<ISubscribeHandler<T>>(count);
+            foreach (var sub in allSubscribers)
+            {
+                if (sub.Topic == topic)
+                    filtered.Add(sub);
+            }
 
             return strategy.SendMessage(filtered, value, cancellationToken);
         }

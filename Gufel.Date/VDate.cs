@@ -94,43 +94,90 @@ namespace Gufel.Date
 
         private string Format(string expression)
         {
-            string result;
             switch (expression)
             {
                 case "F":
                 case "f":
-                    result = Format("$dddd, $d $MMMM $yyyy $HH:$mm:$ss $g");
+                    expression = "$dddd, $d $MMMM $yyyy $HH:$mm:$ss $g";
                     break;
                 case "S":
                 case "s":
-                    result = Format("$yyyy/$MM/$dd $HH:$mm:$ss $g");
-                    break;
-                default:
-                    var sb = new StringBuilder(expression);
-
-                    sb.Replace("$dddd", Setting.Days[DayOfWeek]);
-                    sb.Replace("$MMMM", Setting.Months[Month - 1]);
-                    sb.Replace("$yyyy", Year.ToString());
-                    sb.Replace("$yy", TwoDigitYear.ToString());
-                    sb.Replace("$HH", Hour.ToString("D2"));
-                    sb.Replace("$hh", Hour12.ToString("D2"));
-                    sb.Replace("$mm", Minute.ToString("D2"));
-                    sb.Replace("$ss", Seconds.ToString("D2"));
-                    sb.Replace("$dd", Day.ToString("D2"));
-                    sb.Replace("$MM", Month.ToString("D2"));
-                    sb.Replace("$d", Day.ToString());
-                    sb.Replace("$M", Month.ToString());
-                    sb.Replace("$H", Hour.ToString());
-                    sb.Replace("$h", Hour12.ToString());
-                    sb.Replace("$m", Minute.ToString());
-                    sb.Replace("$s", Seconds.ToString());
-                    sb.Replace("$g", Daylight);
-
-                    result = sb.ToString();
+                    expression = "$yyyy/$MM/$dd $HH:$mm:$ss $g";
                     break;
             }
 
-            return Setting.FormatString(result);
+            var dayOfWeekName = Setting.Days[DayOfWeek];
+            var monthName = Setting.Months[Month - 1];
+            var yearStr = Year.ToString();
+            var twoDigitYearStr = TwoDigitYear.ToString();
+            var hourStr = Hour.ToString();
+            var hourD2Str = Hour.ToString("D2");
+            var hour12Str = Hour12.ToString();
+            var hour12D2Str = Hour12.ToString("D2");
+            var minuteStr = Minute.ToString();
+            var minuteD2Str = Minute.ToString("D2");
+            var secondsStr = Seconds.ToString();
+            var secondsD2Str = Seconds.ToString("D2");
+            var dayStr = Day.ToString();
+            var dayD2Str = Day.ToString("D2");
+            var monthStr = Month.ToString();
+            var monthD2Str = Month.ToString("D2");
+            var daylightStr = Daylight;
+
+            var span = expression.AsSpan();
+            var sb = new StringBuilder(expression.Length + 64);
+
+            int pos = 0;
+            while (pos < span.Length)
+            {
+                if (span[pos] == '$' && pos + 1 < span.Length)
+                {
+                    var remaining = span[pos..];
+                    var matched = false;
+
+                    if (TryMatchToken(remaining, "$dddd", dayOfWeekName, ref pos, sb)) matched = true;
+                    else if (TryMatchToken(remaining, "$MMMM", monthName, ref pos, sb)) matched = true;
+                    else if (TryMatchToken(remaining, "$yyyy", yearStr, ref pos, sb)) matched = true;
+                    else if (TryMatchToken(remaining, "$yy", twoDigitYearStr, ref pos, sb)) matched = true;
+                    else if (TryMatchToken(remaining, "$HH", hourD2Str, ref pos, sb)) matched = true;
+                    else if (TryMatchToken(remaining, "$hh", hour12D2Str, ref pos, sb)) matched = true;
+                    else if (TryMatchToken(remaining, "$mm", minuteD2Str, ref pos, sb)) matched = true;
+                    else if (TryMatchToken(remaining, "$ss", secondsD2Str, ref pos, sb)) matched = true;
+                    else if (TryMatchToken(remaining, "$dd", dayD2Str, ref pos, sb)) matched = true;
+                    else if (TryMatchToken(remaining, "$MM", monthD2Str, ref pos, sb)) matched = true;
+                    else if (TryMatchToken(remaining, "$d", dayStr, ref pos, sb)) matched = true;
+                    else if (TryMatchToken(remaining, "$M", monthStr, ref pos, sb)) matched = true;
+                    else if (TryMatchToken(remaining, "$H", hourStr, ref pos, sb)) matched = true;
+                    else if (TryMatchToken(remaining, "$h", hour12Str, ref pos, sb)) matched = true;
+                    else if (TryMatchToken(remaining, "$m", minuteStr, ref pos, sb)) matched = true;
+                    else if (TryMatchToken(remaining, "$s", secondsStr, ref pos, sb)) matched = true;
+                    else if (TryMatchToken(remaining, "$g", daylightStr, ref pos, sb)) matched = true;
+
+                    if (!matched)
+                    {
+                        sb.Append(span[pos]);
+                        pos++;
+                    }
+                }
+                else
+                {
+                    sb.Append(span[pos]);
+                    pos++;
+                }
+            }
+
+            return Setting.FormatString(sb.ToString());
+        }
+
+        private static bool TryMatchToken(ReadOnlySpan<char> remaining, ReadOnlySpan<char> token, string replacement, ref int pos, StringBuilder sb)
+        {
+            if (remaining.StartsWith(token))
+            {
+                sb.Append(replacement);
+                pos += token.Length;
+                return true;
+            }
+            return false;
         }
 
         #region Constructors
