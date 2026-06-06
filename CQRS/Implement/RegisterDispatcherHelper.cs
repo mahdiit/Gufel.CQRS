@@ -29,6 +29,13 @@ namespace Gufel.Dispatcher.Implement
             services.AddScoped<IMessagePublisher, MessagePublisher>();
         }
 
+        public static void AddFireAndForgetMessagePublisher(this IServiceCollection services, IMessagePublishStrategy? innerStrategy = null)
+        {
+            var inner = innerStrategy ?? new ParallelMessagePublishStrategy();
+            services.AddSingleton<IMessagePublishStrategy>(new FireAndForgetPublishStrategy(inner));
+            services.AddScoped<IMessagePublisher, MessagePublisher>();
+        }
+
         private static void RegisterTypeImplementations(
             IServiceCollection services,
             Assembly assembly,

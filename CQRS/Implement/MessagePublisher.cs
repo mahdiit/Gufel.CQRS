@@ -6,22 +6,24 @@ namespace Gufel.Dispatcher.Implement
     public sealed class MessagePublisher(IServiceProvider serviceProvider,
         IMessagePublishStrategy strategy) : IMessagePublisher
     {
-        public async Task Publish<T>(string topic, T value, CancellationToken cancellationToken = default)
+        public Task Publish<T>(string topic, T value, CancellationToken cancellationToken = default)
         {
             var allSubscribers = serviceProvider.GetServices<ISubscribeHandler<T>>();
-            var filtered = new List<ISubscribeHandler<T>>();
+
+            List<ISubscribeHandler<T>>? filtered = null;
             foreach (var sub in allSubscribers)
             {
                 if (sub.Topic == topic)
                 {
+                    filtered ??= [];
                     filtered.Add(sub);
                 }
             }
 
-            if (filtered.Count == 0)
-                return;
+            if (filtered is null)
+                return Task.CompletedTask;
 
-            await strategy.SendMessage(filtered, value, cancellationToken).ConfigureAwait(false);
+            return strategy.SendMessage(filtered, value, cancellationToken);
         }
     }
 }

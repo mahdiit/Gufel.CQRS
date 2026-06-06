@@ -13,7 +13,7 @@ namespace Gufel.Sample
         {
             Console.WriteLine("Start");
             var services = new ServiceCollection();
-            services.AddMessagePublisher();
+            services.AddFireAndForgetMessagePublisher();
             services.AddSingleton<ISubscribeHandler<OrderModel>, StockHandler>();
             services.AddSingleton<ISubscribeHandler<NotificationModel>, SmsHandler>();
 
@@ -26,12 +26,6 @@ namespace Gufel.Sample
 
             var dispatcher = app.GetRequiredService<IDispatcher>();
             var command = new SampleRequest() { Id = 1200 };
-
-            var bool1 = RequestTypeChecker.IsGenericIRequest(typeof(SampleRequestNoResponse));
-            var bool2 = RequestTypeChecker.IsNonGenericIRequest(typeof(SampleRequestNoResponse));
-            Console.WriteLine(bool1);
-            Console.WriteLine(bool2);
-
             var result = await dispatcher.Dispatch(command, CancellationToken.None);
             Console.WriteLine("Dispatch result: " + result.Result);
 
