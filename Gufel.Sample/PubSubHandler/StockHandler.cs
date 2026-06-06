@@ -12,7 +12,7 @@ namespace Gufel.Sample.PubSubHandler
     {
         public string Topic => "reg-order";
 
-        public async Task HandleAsync(OrderModel data)
+        public async Task HandleAsync(OrderModel data, CancellationToken cancellationToken)
         {
             Console.WriteLine($"{DateTime.UtcNow:G}\tProduct id {data.ProductId} by {data.UserId} stock decreased count {data.OrderCount}");
             await Task.Delay(3000);

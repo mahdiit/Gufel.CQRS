@@ -12,7 +12,7 @@ namespace Gufel.Sample.PubSubHandler
     {
         public string Topic => "sms";
 
-        public async Task HandleAsync(NotificationModel data)
+        public async Task HandleAsync(NotificationModel data, CancellationToken cancellationToken)
         {
             await Task.Delay(1000);
             Console.WriteLine($"{DateTime.UtcNow:G}\t{data.MobileNo}\t{data.Text}");

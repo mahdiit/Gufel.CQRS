@@ -1,4 +1,4 @@
 ﻿namespace Gufel.Date.Base
 {
-    public class DateException(string error) : Exception(error);
+    public sealed class DateException(string error) : Exception(error);
 }

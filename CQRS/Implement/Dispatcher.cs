@@ -18,12 +18,12 @@ namespace Gufel.Dispatcher.Implement
 
                 foreach (var pipeline in pipelines)
                 {
-                    await pipeline.Handle(request, cancellationToken);
+                    await pipeline.Handle(request, cancellationToken).ConfigureAwait(false);
                 }
             }
 
             var handler = serviceProvider.GetRequiredService<IRequestHandler<TRequest>>();
-            await handler.Handle(request, cancellationToken);
+            await handler.Handle(request, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<TResponse> Dispatch<TResponse>(
@@ -37,16 +37,14 @@ namespace Gufel.Dispatcher.Implement
 
                 foreach (var pipeline in pipelines)
                 {
-                    await pipeline.Handle(request, cancellationToken);
+                    await pipeline.Handle(request, cancellationToken).ConfigureAwait(false);
                 }
             }
 
             var handler = serviceProvider
                 .GetRequiredService<IRequestHandler<IRequest<TResponse>, TResponse>>();
 
-            return await handler.Handle(request, cancellationToken);
+            return await handler.Handle(request, cancellationToken).ConfigureAwait(false);
         }
     }
-
-
 }

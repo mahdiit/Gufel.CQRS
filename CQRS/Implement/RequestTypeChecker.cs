@@ -6,13 +6,22 @@ public static class RequestTypeChecker
 {
     public static bool IsGenericIRequest(Type type)
     {
-        return type.GetInterfaces()
-            .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IRequest<>));
+        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IRequest<>))
+            return true;
+
+        foreach (var i in type.GetInterfaces())
+        {
+            if (i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IRequest<>))
+                return true;
+        }
+        return false;
     }
 
     public static bool IsNonGenericIRequest(Type type)
     {
-        return typeof(IRequest).IsAssignableFrom(type) &&
-               !IsGenericIRequest(type);
+        if (!typeof(IRequest).IsAssignableFrom(type))
+            return false;
+
+        return !IsGenericIRequest(type);
     }
 }

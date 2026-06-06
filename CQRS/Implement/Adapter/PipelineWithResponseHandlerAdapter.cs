@@ -2,7 +2,7 @@
 
 namespace Gufel.Dispatcher.Implement.Adapter;
 
-public class PipelineWithResponseHandlerAdapter<TRequest, TResponse>(IPipelineHandler<TRequest, TResponse> inner)
+public sealed class PipelineWithResponseHandlerAdapter<TRequest, TResponse>(IPipelineHandler<TRequest, TResponse> inner)
     : IPipelineHandler<IRequest<TResponse>, TResponse>
     where TRequest : IRequest<TResponse>
 {

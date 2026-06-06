@@ -2,7 +2,7 @@
 
 namespace Gufel.Date
 {
-    public record VDateSpan
+    public sealed record VDateSpan
     {
         public int Year { get; set; } = 0;
         public int Month { get; set; } = 0;
@@ -20,7 +20,7 @@ namespace Gufel.Date
             if (Days > 0)
                 result.Add($"{Days} {Resources.DayText}");
 
-            return string.Join(" " + Resources.Separator + " ", result.ToArray());
+            return string.Join($" {Resources.Separator} ", result);
         }
     }
 }

@@ -17,7 +17,7 @@ public class TestSubscriber(string topic) : ISubscribeHandler<TestMessage>
     public bool WasHandled { get; private set; }
     public TestMessage? ReceivedMessage { get; private set; }
 
-    public Task HandleAsync(TestMessage data)
+    public Task HandleAsync(TestMessage data, CancellationToken cancellationToken)
     {
         WasHandled = true;
         ReceivedMessage = data;

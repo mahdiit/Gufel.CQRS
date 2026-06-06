@@ -2,7 +2,7 @@
 
 namespace Gufel.Dispatcher.Implement.Adapter;
 
-public class RequestWithResponseHandlerAdapter<TRequest, TResponse>(IRequestHandler<TRequest, TResponse> inner)
+public sealed class RequestWithResponseHandlerAdapter<TRequest, TResponse>(IRequestHandler<TRequest, TResponse> inner)
     : IRequestHandler<IRequest<TResponse>, TResponse>
     where TRequest : IRequest<TResponse>
 {

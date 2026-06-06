@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(analyzing-dotnet-performance)"
+    ]
+  },
+  "$version": 4
+}

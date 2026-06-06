@@ -1,11 +1,15 @@
 ﻿namespace Gufel.Dispatcher.Base.MessagePublisher
 {
-    public class WhenAllMessagePublishStrategy : IMessagePublishStrategy
+    public sealed class WhenAllMessagePublishStrategy : IMessagePublishStrategy
     {
-        public Task SendMessage<T>(IEnumerable<ISubscribeHandler<T>> subscribers, T value)
+        public async Task SendMessage<T>(IEnumerable<ISubscribeHandler<T>> subscribers, T value, CancellationToken cancellationToken)
         {
-            var tasks = subscribers.Select(subscriber => subscriber.HandleAsync(value)).ToList();
-            return Task.WhenAll(tasks);
+            var tasks = new List<Task>();
+            foreach (var subscriber in subscribers)
+            {
+                tasks.Add(subscriber.HandleAsync(value, cancellationToken));
+            }
+            await Task.WhenAll(tasks).ConfigureAwait(false);
         }
     }
 }

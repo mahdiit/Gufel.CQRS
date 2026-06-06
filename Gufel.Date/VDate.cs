@@ -2,11 +2,10 @@
 using System.Text.RegularExpressions;
 using Gufel.Date.Base;
 using Gufel.Date.Properties;
-using static System.Text.RegularExpressions.Regex;
 
 namespace Gufel.Date
 {
-    public record VDate : IComparable<VDate>
+    public sealed partial record VDate : IComparable<VDate>
     {
         private int _year, _day, _month, _hour, _minute, _seconds, _milliSecond;
         public VDateSetting Setting { get; }
@@ -107,38 +106,25 @@ namespace Gufel.Date
                     result = Format("$yyyy/$MM/$dd $HH:$mm:$ss $g");
                     break;
                 default:
-
-                    var replacements = new Dictionary<string, string>
-                    {
-                        [@"\$d{4}"] = Setting.Days[DayOfWeek],
-                        [@"\$d{2}"] = Day.ToString("D2"),
-                        [@"\$d{1}"] = Day.ToString(),
-
-                        [@"\$M{4}"] = Setting.Months[Month - 1],
-                        [@"\$M{2}"] = Month.ToString("D2"),
-                        [@"\$M{1}"] = Month.ToString(),
-
-                        [@"\$y{4}"] = Year.ToString(),
-                        [@"\$y{2}"] = TwoDigitYear.ToString(),
-
-                        [@"\$H{2}"] = Hour.ToString("D2"),
-                        [@"\$H{1}"] = Hour.ToString(),
-
-                        [@"\$h{2}"] = Hour12.ToString("D2"),
-                        [@"\$h{1}"] = Hour12.ToString(),
-
-                        [@"\$m{2}"] = Minute.ToString("D2"),
-                        [@"\$m{1}"] = Minute.ToString(),
-
-                        [@"\$s{2}"] = Seconds.ToString("D2"),
-                        [@"\$s{1}"] = Seconds.ToString(),
-
-                        [@"\$g{1}"] = Daylight,
-                    };
-
                     var sb = new StringBuilder(expression);
-                    sb = replacements.Aggregate(sb,
-                        (current, kvp) => new StringBuilder(Replace(current.ToString(), kvp.Key, kvp.Value)));
+
+                    sb.Replace("$dddd", Setting.Days[DayOfWeek]);
+                    sb.Replace("$MMMM", Setting.Months[Month - 1]);
+                    sb.Replace("$yyyy", Year.ToString());
+                    sb.Replace("$yy", TwoDigitYear.ToString());
+                    sb.Replace("$HH", Hour.ToString("D2"));
+                    sb.Replace("$hh", Hour12.ToString("D2"));
+                    sb.Replace("$mm", Minute.ToString("D2"));
+                    sb.Replace("$ss", Seconds.ToString("D2"));
+                    sb.Replace("$dd", Day.ToString("D2"));
+                    sb.Replace("$MM", Month.ToString("D2"));
+                    sb.Replace("$d", Day.ToString());
+                    sb.Replace("$M", Month.ToString());
+                    sb.Replace("$H", Hour.ToString());
+                    sb.Replace("$h", Hour12.ToString());
+                    sb.Replace("$m", Minute.ToString());
+                    sb.Replace("$s", Seconds.ToString());
+                    sb.Replace("$g", Daylight);
 
                     result = sb.ToString();
                     break;
@@ -283,8 +269,7 @@ namespace Gufel.Date
         public bool IsLeapYear => Setting.CurrentCalendar.IsLeapYear(Year);
         public bool IsLeapMonth => Setting.CurrentCalendar.IsLeapMonth(Year, Month);
 
-        public int TwoDigitYear =>
-            Year.ToString().Length == 4 ? Convert.ToInt32(Year.ToString().Substring(2, 2)) : Year;
+        public int TwoDigitYear => Year % 100;
 
         public string Daylight => Hour > 12 ? Setting.Pm : Setting.Am;
         public int MonthLength => Setting.CurrentCalendar.GetDaysInMonth(Year, Month);
@@ -309,30 +294,24 @@ namespace Gufel.Date
         public static VDate Now => new();
         public static VDate Today => new(DateTime.Today);
 
-        private static readonly Regex RegexDate = new(
-            @"\A(\d{4})[/\-](\d{1,2})[/\-](\d{1,2})\z",
-            RegexOptions.Compiled | RegexOptions.CultureInvariant,
-            TimeSpan.FromSeconds(1));
+        [GeneratedRegex(@"\A(\d{4})[/\-](\d{1,2})[/\-](\d{1,2})\z", RegexOptions.CultureInvariant, 1000)]
+        private static partial Regex RegexDate();
 
-        private static readonly Regex RegexDateTime = new(
-            @"\A(\d{4})[/\-](\d{1,2})[/\-](\d{1,2}) (\d{1,2}):(\d{1,2}):(\d{1,2})\z",
-            RegexOptions.Compiled | RegexOptions.CultureInvariant,
-            TimeSpan.FromSeconds(1));
+        [GeneratedRegex(@"\A(\d{4})[/\-](\d{1,2})[/\-](\d{1,2}) (\d{1,2}):(\d{1,2}):(\d{1,2})\z", RegexOptions.CultureInvariant, 1000)]
+        private static partial Regex RegexDateTime();
 
-        private static readonly Regex RegexDateTimeFactor = new(
-            @"\A(\d{4})/(\d{1,2})/(\d{1,2})-(\d{1,2}):(\d{1,2})\z",
-            RegexOptions.Compiled | RegexOptions.CultureInvariant,
-            TimeSpan.FromSeconds(1));
+        [GeneratedRegex(@"\A(\d{4})/(\d{1,2})/(\d{1,2})-(\d{1,2}):(\d{1,2})\z", RegexOptions.CultureInvariant, 1000)]
+        private static partial Regex RegexDateTimeFactor();
 
         public static bool TryParse(string dt, out VDate? result)
         {
             result = null;
 
-            if (TryMatch(RegexDate.Match(dt), 3, p => new VDate(p[0], p[1], p[2]), out result)) return true;
+            if (TryMatch(RegexDate().Match(dt), 3, p => new VDate(p[0], p[1], p[2]), out result)) return true;
 
-            if (TryMatch(RegexDateTime.Match(dt), 6, p => new VDate(p[0], p[1], p[2], p[3], p[4], p[5], 0), out result)) return true;
+            if (TryMatch(RegexDateTime().Match(dt), 6, p => new VDate(p[0], p[1], p[2], p[3], p[4], p[5], 0), out result)) return true;
 
-            if (TryMatch(RegexDateTimeFactor.Match(dt), 5, p => new VDate(p[0], p[1], p[2], p[3], p[4], 0, 0), out result)) return true;
+            if (TryMatch(RegexDateTimeFactor().Match(dt), 5, p => new VDate(p[0], p[1], p[2], p[3], p[4], 0, 0), out result)) return true;
 
             return false;
 
@@ -360,18 +339,17 @@ namespace Gufel.Date
 
         public static implicit operator int(VDate input)
         {
-            return Convert.ToInt32($"{input.Year:D4}{input.Month:D2}{input.Day:D2}");
+            return input.Year * 10000 + input.Month * 100 + input.Day;
         }
 
         public static implicit operator VDate(int input)
         {
-            ReadOnlySpan<char> span = input.ToString();
-            if (span.Length == 8)
-                return new VDate(
-                    int.Parse(span.Slice(0, 4)),
-                    int.Parse(span.Slice(4, 2)),
-                    int.Parse(span.Slice(6, 2))
-                );
+            var year = input / 10000;
+            var month = (input / 100) % 100;
+            var day = input % 100;
+
+            if (year >= 1 && month >= 1 && month <= 12 && day >= 1 && day <= 31)
+                return new VDate(year, month, day);
 
             throw new ArgumentException("Invalid date format int");
         }
