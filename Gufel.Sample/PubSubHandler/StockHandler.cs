@@ -1,9 +1,4 @@
 ﻿using Gufel.Sample.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Gufel.Dispatcher.Base.MessagePublisher;
 
 namespace Gufel.Sample.PubSubHandler
@@ -15,9 +10,9 @@ namespace Gufel.Sample.PubSubHandler
         public async Task HandleAsync(OrderModel data, CancellationToken cancellationToken)
         {
             Console.WriteLine($"{DateTime.UtcNow:G}\tProduct id {data.ProductId} by {data.UserId} stock decreased count {data.OrderCount}");
-            await Task.Delay(3000);
-            pubSubHandler.Publish("sms", new NotificationModel() { MobileNo = "09203102059", Text = "Order complete." });
-            Console.WriteLine($"{DateTime.UtcNow:G}\tSms sent");
+            await Task.Delay(3000, cancellationToken);
+            await pubSubHandler.Publish("sms", new NotificationModel() { MobileNo = "09203102059", Text = "Order complete." }, cancellationToken);
+            Console.WriteLine($"{DateTime.UtcNow:G}\tSms sent event");
         }
     }
 }

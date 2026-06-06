@@ -2,7 +2,6 @@ using Gufel.Dispatcher.Base.MessagePublisher;
 using Gufel.Dispatcher.Implement;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
-using Xunit;
 
 namespace Gufel.UnitTest;
 
@@ -35,7 +34,7 @@ public class MessagePublisherTests
     public MessagePublisherTests()
     {
         var services = new ServiceCollection();
-        
+
         _subscriber1 = new TestSubscriber("topic1");
         _subscriber2 = new TestSubscriber("topic1");
         _subscriber3 = new TestSubscriber("topic2");
@@ -43,7 +42,7 @@ public class MessagePublisherTests
         services.AddSingleton<ISubscribeHandler<TestMessage>>(_subscriber1);
         services.AddSingleton<ISubscribeHandler<TestMessage>>(_subscriber2);
         services.AddSingleton<ISubscribeHandler<TestMessage>>(_subscriber3);
-        
+
         // Use WhenAllMessagePublishStrategy for predictable test behavior
         services.AddMessagePublisher(new WhenAllMessagePublishStrategy());
 
@@ -58,7 +57,7 @@ public class MessagePublisherTests
         var message = new TestMessage { Content = "test message" };
 
         // Act
-        _publisher.Publish("topic1", message);
+        await _publisher.Publish("topic1", message);
 
         // Wait a bit for async operations to complete
         await Task.Delay(100);
@@ -80,7 +79,7 @@ public class MessagePublisherTests
         var message = new TestMessage { Content = "test message" };
 
         // Act
-        _publisher.Publish("nonexistent-topic", message);
+        await _publisher.Publish("nonexistent-topic", message);
 
         // Wait a bit for async operations to complete
         await Task.Delay(100);
@@ -98,7 +97,7 @@ public class MessagePublisherTests
         var services = new ServiceCollection();
         var subscriber1 = new TestSubscriber("topic1");
         var subscriber2 = new TestSubscriber("topic1");
-        
+
         services.AddSingleton<ISubscribeHandler<TestMessage>>(subscriber1);
         services.AddSingleton<ISubscribeHandler<TestMessage>>(subscriber2);
         services.AddMessagePublisher(new ParallelMessagePublishStrategy());
@@ -108,7 +107,7 @@ public class MessagePublisherTests
         var message = new TestMessage { Content = "test message" };
 
         // Act
-        publisher.Publish("topic1", message);
+        await publisher.Publish("topic1", message);
 
         // Wait a bit for async operations to complete
         await Task.Delay(100);
@@ -119,4 +118,4 @@ public class MessagePublisherTests
         subscriber1.ReceivedMessage.ShouldBe(message);
         subscriber2.ReceivedMessage.ShouldBe(message);
     }
-} 
+}
