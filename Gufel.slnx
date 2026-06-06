@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="Benchmark/Benchmark.csproj" />
+  <Project Path="CQRS/Gufel.Dispatcher.csproj" />
+  <Project Path="Gufel.Date/Gufel.Date.csproj" />
+  <Project Path="Gufel.Sample/Gufel.Sample.csproj" />
+  <Project Path="UnitTest/Gufel.UnitTest.csproj" />
+</Solution>
