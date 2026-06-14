@@ -9,7 +9,7 @@
 		<PackageId>Gufel.Dispatcher</PackageId>
 		<Title>Gufel Dispatcher (CQRS And Mediator)</Title>
 		<Authors>mahdiit</Authors>
-		<Version>1.2.2</Version>
+		<Version>1.2.3</Version>
 		<Description>CQRS And Mediator with pipeline handler and message publisher</Description>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/mahdiit/Gufel.CQRS</RepositoryUrl>
@@ -17,6 +17,11 @@
 		<PackageIcon>dispatcher.jpg</PackageIcon>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
 		<PackageProjectUrl>https://github.com/mahdiit/Gufel.CQRS</PackageProjectUrl>
+		<PackageReleaseNotes>## 1.2.3
+- FireAndForgetPublishStrategy: replaced Task.Run with System.Threading.Channels for bounded/unbounded producer-consumer message dispatch
+- FireAndForgetPublishStrategy: simplified, removed inner strategy dependency; subscribers are invoked directly via Parallel.ForEachAsync in the channel consumer
+- FireAndForgetPublishStrategy: added ILogger support for error logging on subscriber exceptions
+- AddFireAndForgetMessagePublisher registration: simplified signature, added optional channelCapacity parameter</PackageReleaseNotes>
 	</PropertyGroup>
 
 	<ItemGroup>

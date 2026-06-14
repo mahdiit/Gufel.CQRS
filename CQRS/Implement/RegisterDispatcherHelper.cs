@@ -2,6 +2,7 @@
 using Gufel.Dispatcher.Base.MessagePublisher;
 using Gufel.Dispatcher.Implement.Adapter;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System.Reflection;
 
 namespace Gufel.Dispatcher.Implement
@@ -29,10 +30,12 @@ namespace Gufel.Dispatcher.Implement
             services.AddScoped<IMessagePublisher, MessagePublisher>();
         }
 
-        public static void AddFireAndForgetMessagePublisher(this IServiceCollection services, IMessagePublishStrategy? innerStrategy = null)
+        public static void AddFireAndForgetMessagePublisher(this IServiceCollection services, int? channelCapacity = null)
         {
-            var inner = innerStrategy ?? new ParallelMessagePublishStrategy();
-            services.AddSingleton<IMessagePublishStrategy>(new FireAndForgetPublishStrategy(inner));
+            services.AddSingleton<IMessagePublishStrategy>(sp =>
+                new FireAndForgetPublishStrategy(
+                    sp.GetRequiredService<ILogger<FireAndForgetPublishStrategy>>(),
+                    channelCapacity));
             services.AddScoped<IMessagePublisher, MessagePublisher>();
         }
 
