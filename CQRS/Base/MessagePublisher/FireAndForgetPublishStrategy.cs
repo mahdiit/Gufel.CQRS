@@ -46,7 +46,17 @@ public sealed class FireAndForgetPublishStrategy : IMessagePublishStrategy, IDis
             Parallel.ForEachAsync(
                 materialized,
                 new ParallelOptions { CancellationToken = cancellationToken },
-                (subscriber, ct) => new ValueTask(subscriber.HandleAsync(value, ct))
+                async (subscriber, ct) =>
+                {
+                    try
+                    {
+                        await subscriber.HandleAsync(value, ct).ConfigureAwait(false);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "FireAndForgetPublishStrategy: subscriber threw an exception");
+                    }
+                }
             ));
 
         return Task.CompletedTask;

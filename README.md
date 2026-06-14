@@ -139,17 +139,39 @@ publisher.Publish("order-created", message);
 
 ## Publishing Strategies
 
-The Message Publisher supports two publishing strategies:
+The Message Publisher supports three publishing strategies:
 
-1. **ParallelMessagePublishStrategy** (Default)
+1. **ParallelMessagePublishStrategy** (Default in `AddMessagePublisher`)
    - Processes subscribers in parallel
    - Best for independent subscribers
    - Faster execution
 
 2. **WhenAllMessagePublishStrategy**
-   - Processes subscribers sequentially
+   - Processes subscribers concurrently via `Task.WhenAll`
    - Waits for all subscribers to complete
    - Better for dependent subscribers
+
+3. **FireAndForgetPublishStrategy**
+   - Uses `System.Threading.Channels` for producer-consumer dispatch
+   - Returns immediately; subscribers are invoked on a background consumer
+   - Supports bounded (`capacity`) and unbounded channels
+   - Errors are logged via `ILogger<FireAndForgetPublishStrategy>` and suppressed
+
+#### Registration
+
+```csharp
+// AddMessagePublisher — default strategy (Parallel)
+services.AddMessagePublisher();
+
+// AddMessagePublisher with explicit strategy
+services.AddMessagePublisher(new WhenAllMessagePublishStrategy());
+
+// AddFireAndForgetMessagePublisher — channel-based dispatch
+services.AddFireAndForgetMessagePublisher();
+
+// AddFireAndForgetMessagePublisher with bounded channel
+services.AddFireAndForgetMessagePublisher(channelCapacity: 1024);
+```
 
 ## Contributing
 
